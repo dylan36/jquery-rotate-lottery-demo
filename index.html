@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>抽奖-Demo</title>
+</head>
+<style type="text/css">
+  *{padding:0;margin:0}
+  body{
+    text-align:center
+  }
+  .lottery-plate{
+    position:relative;
+    width:509px;
+    height:509px;
+    margin: 50px auto;
+  }
+  .rotate-bg{
+    width:509px;
+    height:509px;
+    background:url(./source/bg.jpg);
+    position:absolute;
+    top:0;
+    left:0
+  }
+  .rotate-text{
+    width:105px;
+    height:105px;
+    background:url(./source/button.png);
+    position:absolute;
+    top: 39%;
+    left: 39%;
+    z-index: 1;
+  }
+  .lottery-plate div.lottery-star{
+    width:214px;
+    height:214px;
+    position:absolute;
+    top:150px;
+    left:147px;
+    outline:none
+  }
+  .lottery-plate div.lottery-star #lotteryBtn{
+    cursor: pointer;
+    position: absolute;
+    top:0;
+    left:0;
+  }
+  .result-list{
+  	border:1px solid #ddd;
+  	height: 400px;
+  	width: 600px;
+  	margin: 20px auto;
+  	overflow: auto;
+  }
+  .result-list p{
+  	padding:15px 0;
+  	border-bottom: 1px dashed #ddd
+  }
+</style>
+<body>
+  <div class="lottery-plate">
+  <div class="rotate-text" id="lotteryBtn" onclick="toRotate()"></div>
+  <div class="rotate-bg"></div>
+  <div class="lottery-star"><img src="./source/pointer.png" id="lottery" style="transform: rotate(180deg);"></div>
+</div>
+<div class="result-list">
+	<p class="result-title">获奖列表</p>
+</div>
+<script type="text/javascript" src="./source/jquery.min.js"></script>
+<script type="text/javascript" src="./source/jQuery-rotate.2.2.js"></script>
+<script type="text/javascript">
+function timeOut(){
+  $("#lottery").rotate({
+    angle:0, 
+    duration: 10000, 
+    animateTo: 2160, //360*n
+    callback:function(){
+      alert('通讯故障')
+    }
+  }); 
+}
+function rotateFunc(awards,angle,text){  //awards:奖项,angle:奖项对应的角度
+    $('#lottery').stopRotate();
+    $("#lottery").rotate({
+      angle:0, 
+      duration: 5000, 
+      animateTo: angle+1440+Math.floor(Math.random()*20), //angle是图片上各奖项对应的角度,后面随机数为了避免规矩的角度,最大20°
+      callback:function(){
+      	var res = '<p>恭喜XXX抽中了【'+text+'】</p>';
+      	if (awards==0) {
+      		alert("没中奖")
+      	}else{
+      		var res = '<p>恭喜XXX抽中了【'+text+'】</p>';
+      		$(".result-title").after(res)
+      	}
+        $("#lotteryBtn").bind('click',function(){
+          toRotate()
+        });
+      }
+    }); 
+  }
+function toRotate(){
+  $("#lotteryBtn").unbind('click');
+  $("#lotteryBtn").prop('onclick','');
+  //网络故障调用timeOut
+  var data = [1,2,3,0]; //返回的数组
+    data = data[Math.floor(Math.random()*data.length)];
+  if(data==1){
+    rotateFunc(1,157,'Mac')
+  }
+  if(data==2){
+    rotateFunc(2,247,'iPhone')
+  }
+  if(data==3){
+    rotateFunc(3,22,'watch')
+  }
+  if(data==0){
+    var angle = [67,112,202,292,337];
+    angle = angle[Math.floor(Math.random()*angle.length)]
+    rotateFunc(0,angle,'- -')
+  }
+};
+</script> 
+  
+</body>
+</html>
